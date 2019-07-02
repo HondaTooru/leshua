@@ -117,3 +117,7 @@ export function Scened (data) { // 记录会员参数
 export function rulesd (data) { //会员活动规则
 	return service.post('/routine/Buildapi/rule', data).then(res => res)
 }
+
+export function IsBinding (data) {
+	return service.post('/routine/Auth_api/binding', data).then(res => res)
+}

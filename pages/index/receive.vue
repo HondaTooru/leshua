@@ -54,17 +54,20 @@
 					</view>
 				</view>
 			</view>
-		</view>		
+		</view>
+		<in-ids :show="flag" @on-close="flag = false"></in-ids>
 	</view>
 </template>
 
 <script>
-	import cuHead from '@/components/head.vue'
+	import cuHead from '@/components/head'
 	import { getCard } from '@/api'
 	import { mapGetters } from 'vuex'
+	import { InIds } from '@/components/ids'
 	export default {
 		data () {
 			return {
+				flag: false,
 				show: false,
 				card: {
 					whole: 0,
@@ -82,6 +85,7 @@
 		computed: {
 			...mapGetters(['userInfo'])
 		},
+		components: { InIds, cuHead },
 		created () {
 			if (!this.userInfo) {
 				setTimeout(() => {
@@ -94,8 +98,12 @@
 		methods: {
 			async getInfo (e) {
 				if (e.detail.errMsg === 'getUserInfo:ok') {
-					await this.$store.dispatch('wxAuth', e)
-					this.getList()
+					const x = await this.$store.dispatch('wxAuth', e)
+					if (!x) {
+						this.flag = true
+					} else {
+						this.getList()
+					}
 				} else {
 					uni.showModal({
 						content: '授权失败',
@@ -118,8 +126,7 @@
 					url: '/pages/index/upgrade?imgsrc='+this.upgrade
 				})
 			}
-		},
-		components: { cuHead }
+		}
 	}
 </script>
 

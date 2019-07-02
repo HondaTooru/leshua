@@ -32,7 +32,8 @@
 		},
 		data() {
 			return {
-				current: 0
+				current: 0,
+				scene: ''
 			}
 		},
 		onShareAppMessage() {
@@ -41,15 +42,18 @@
 				path: `/pages/index/index?scene=${this.userInfo.uid}`,
 			}
 		},
+		// onShow() {
+		// 	console.log(this.scene)
+		// },
 		onLoad (query) {
-			let scene =decodeURIComponent(query.scene)
-			scene = scene == 'undefined' ? '' : scene
+			this.scene =decodeURIComponent(query.scene)
+			this.scene = this.scene == 'undefined' ? '' : this.scene
 			const data={
 				query:JSON.stringify(query),
-				scene
+				scene: this.scene
 			}
 			Scened(data).then(res => {})
-			this.$store.commit('SET_SPID', scene)
+			this.$store.commit('SET_SPID', this.scene)
 		},
 		computed: {
 			...mapGetters(['userInfo'])

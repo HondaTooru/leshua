@@ -44,8 +44,8 @@ const user = {
 					success: async result => {
 						const code = result.code
 						const userinfo = e.detail.rawData
-						await dispatch('wxLogin', { code, userinfo, e })
-						resolve()
+						const x = await dispatch('wxLogin', { code, userinfo, e })
+						resolve(x)
 					}
 				})
 			 })			
@@ -54,10 +54,10 @@ const user = {
 			return new Promise( async resolve => {
 				uni.showLoading({ title: '授权中­' })
 				await dispatch('login', info)
-				await dispatch('getUserInfo')
+				const x = await dispatch('getUserInfo')
 				await dispatch('getAddress')
 				uni.hideLoading()
-				resolve()
+				resolve(x)
 			})
 		},
 		login ({ commit, state }, { code, userinfo, e }) {
@@ -73,10 +73,16 @@ const user = {
 			return new Promise(resolve => {
 				getUserInfo().then(res => {
 					const user = res.data
-					res.data.now_money = +res.data.now_money
-					commit('SET_USERINFO', user)
-					uni.setStorageSync('USER', user)
-					resolve()
+					const id = +res.data.spread_uid
+					if (id > 0) {
+						res.data.now_money = +res.data.now_money
+						commit('SET_USERINFO', user)
+						uni.setStorageSync('USER', user)
+						resolve(true)
+					} else {
+						resolve(false)
+						uni.setStorageSync('O_USER', user)
+					}
 				})
 			})
 		},

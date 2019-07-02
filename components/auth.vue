@@ -1,15 +1,28 @@
 <template>
+<view>
 	<view class="auth">
 		<button class="cu-btn bg-transparent" hover-class="none" open-type="getUserInfo" @getuserinfo="getInfo"></button>
 	</view>
+	<in-ids :show="show" @on-close="show = false"></in-ids>
+</view>	
 </template>
 
 <script>
+	import { InIds } from '@/components/ids'
 	export default {
+		data () {
+			return {
+				show: false
+			}
+		},
+		components: { InIds },
 		methods: {
-			getInfo (e) {
+			async getInfo (e) {
 				if (e.detail.errMsg === 'getUserInfo:ok') {
-					this.$store.dispatch('wxAuth', e)
+					const x = await this.$store.dispatch('wxAuth', e)
+					if (!x) {
+						this.show = true
+					}
 				} else {
 					uni.showModal({
 						content: '授权失败',

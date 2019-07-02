@@ -67,17 +67,20 @@
 				</view>
 			</view>
 		</view>
-	</view>		
+	</view>	
+	<in-ids :show="flag" @on-close="flag = false"></in-ids>
 </view>
 </template>
 
 <script>
 	import { BindIndex } from '@/api'
 	import { mapGetters } from 'vuex'
+	import InIds from '@/components/ids'
 	export default {
 		name: 'Home',		
 		data () {
 			return {
+				flag: false,
 				show: false,
 				benefit: [],
 				give: [],
@@ -90,6 +93,7 @@
 		computed: {
 			...mapGetters(['userInfo'])
 		},
+		components: { InIds },
 		created () {
 			uni.showLoading({ mask: true, title:'加载中' })
 			BindIndex().then(res => {
@@ -118,10 +122,13 @@
 			})
 		},
 		methods: {
-			getInfo (e) {
+			async getInfo (e) {
 				if (e.detail.errMsg === 'getUserInfo:ok') {
-					this.$store.dispatch('wxAuth', e)
+					const x = await this.$store.dispatch('wxAuth', e)
 					this.show = false
+					if (!x) {
+						this.flag = true
+					}
 				} else {
 					uni.showModal({
 						content: '授权失败',

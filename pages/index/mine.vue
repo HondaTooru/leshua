@@ -83,7 +83,7 @@
 </template>
 
 <script>
-	import cuHead from '@/components/head.vue'
+	import cuHead from '@/components/head'
 	import { mapGetters, mapActions } from 'vuex'
 	import {rulesd} from '@/api'
 	export default {
