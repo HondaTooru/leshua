@@ -12,11 +12,11 @@ class Request {
     success () {
     },
     fail (err) {
-			uni.showToast({
-				title: err.errMsg,
-				icon: 'none',
-				duration: 2000
-			})
+		uni.showToast({
+			title: err.errMsg,
+			icon: 'none',
+			duration: 2000
+		})
     },
     complete () {
     }
@@ -102,7 +102,7 @@ class Request {
 }
 
 const service = new Request()
-const str = ['订单不存在']
+const str = ['订单不存在', '已领取过该优惠劵!', '领取的优惠劵已领完或已过期!']
 service.setConfig(config => {
 	config.baseUrl = 'https://clob.bjhg168.com'
 	return config

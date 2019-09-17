@@ -1,61 +1,20 @@
 <template>
 <view>
 	<cu-custom bgColor="bg-gradual-red">
-		<block slot="content">产品列表</block>
-	</cu-custom>	
-	<view class="list bg-white" v-if="loaded">
-		<view class="item shadow-warp solid bg-white" v-for="(i, k) in list" :key="k">
-			<userAuth v-if="!userInfo"></userAuth>
-			<navigator :url="'/pages/index/prodetail?id='+i.id"><image :src="i.image"></image></navigator>
-			<view>
-				<view class="padding-sm">{{ i.store_name }}</view>
-				<view class="padding-left-sm padding-right-sm padding-bottom-sm flex align-center">
-					<text class="text-red text-bold text-df flex-sub text-price">{{ i.price }}</text>
-					<button class="cu-btn icon bg-red sm" @tap="End" :data-item='i'>
-						<text class="cuIcon-cartfill"></text>
-					</button>
-				</view>
-			</view>
-		</view>
-		<view class="myCart">
-			<userAuth v-if="!userInfo"></userAuth>
-			<view class="cu-avatar lg round shadow-blur bg-gradual-red" @tap="linkCart">
-				<!-- <view class="cu-tag badge"></view> -->
-				<text class="cuIcon-cartfill"></text>
-			</view>
-		</view>		
-	</view>
-	<empty-data v-else></empty-data>
-	<view @touchmove.stop.prevent="" :class="['cu-modal', {show: showAttr}]" @tap="showAttr = false">
-		<view class="cu-dialog bg-white" @tap.stop="">
-			<view class="attr solid-bottom">
-				<view class="item" v-for="(item, index) in pAttr" :key="index">
-					<view class="name">{{ item.attr_name }}：</view>
-					<view class="box flex flex-wrap">
-						<block v-for= "(son, idx) in item.attr_value" :key="idx">
-							<view :class="{act: son.check}" @tap="selectPro(son, index)">{{ son.attr }}</view>
-						</block>
-					</view>
-				</view>		
-			</view>
-			<view class="count flex justify-between align-center padding-sm">
+		<block slot="content">商铺列表</block>
+	</cu-custom>
+	<scroll-view scroll-y @scrolltolower="loadMore" class="scroll" :style="{ top: top + 'px' }">
+		<view class="list bg-white" v-if="loaded && list.length">
+			<view  class="item shadow-warp solid bg-white" v-for="(i, k) in list" :key="k">
+				<navigator :url="'/pages/index/prodetail?id='+i.id"><image :src="i.image"></image></navigator>
 				<view>
-					<view class="text-black">购买数量：</view>
-					<view class="text-xs text-gray text-left">剩余{{ _is ? selected.stock : PRO.stock }}件</view>
+					<view class="padding-sm">{{ i.store_name }}</view>
+					<view class="padding-left-sm padding-right-sm padding-bottom-sm flex align-center">
+					</view>
 				</view>
-				<uni-number-box
-					:min="1"
-					:max="1"
-					disabled
-					:value="cartNum"
-					@change="buyNums"
-				></uni-number-box>					
-			</view>
-			<view class="padding-sm solid-top flex justify-end">
-				<button class="cu-btn bg-red round shadow-blur sm" @tap="f">加入购物车</button>
-			</view>
-		</view>
-	</view>
+			</view>	
+		</view>		
+	</scroll-view>
 </view>
 </template>
 
@@ -68,13 +27,15 @@
 		components: { uniNumberBox },
 		data () {
 			return {
+				top: this.CustomBar,
 				list: [],
 				loaded: false,
 				showAttr: false,
 				pAttr: [],
 				pValue: [],
 				cartNum: 1,
-				PRO: {}
+				PRO: {},
+				first:1
 			}
 		},
 		created() {
@@ -90,7 +51,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo']),
+			...mapGetters(['userInfo', 'cid']),
 			needSelect () {
 				return this.pAttr.filter(item => {
 					return !item.attr_value.some(k => k.check);
@@ -115,6 +76,18 @@
 				uni.navigateTo({
 					url: '/user/myCart'
 				})
+			},
+			async loadMore(mescroll){
+				this.first++
+				uni.showLoading({ title: '加载中' })
+				const len = await this.action()
+				uni.hideLoading()
+				if (!len && this.first !== 1) {
+					uni.showToast({
+						icon: 'none',
+						title: '没有更多了'
+					})
+				} 
 			},
 			buyNums (e) {
 				this.cartNum = e
@@ -169,21 +142,35 @@
 			selectPro (o, i) {
 				this.pAttr[i].attr_value.forEach(item => { item.check = false })
 				o.check = !o.check
-			},			
-			getList () {
+			},
+			action () {
+				return new Promise(resolove => {
+					ProList({ cid: this.cid, first: this.first }).then(res => {
+						this.loaded = true
+						this.list = [...this.list, ...res.data]
+						resolove(res.data.length)
+					})					
+				})
+			},
+			async getList () {
 				this.loaded = false
 				uni.showLoading({title: '加载中' })
-				ProList().then(res => {
-					uni.hideLoading()
-					this.loaded = true
-					this.list = res.data
-				})
+				await this.action()
+				this.loaded = true
+				uni.hideLoading()
 			}
 		}
 	}
 </script>
 
-<style lang="less">
+<style lang="less" scope>
+.scroll {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	bottom: calc(100rpx + env(safe-area-inset-bottom) / 2);
+	overflow: hidden;
+}	
 .list {
 	display: flex;
 	flex-wrap: wrap;

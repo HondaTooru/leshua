@@ -2,7 +2,7 @@
 	<view>
 		<cu-custom bgColor="bg-gradual-red" :isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">商品详情</block>
+			<block slot="content">商铺详情</block>
 		</cu-custom>
 		<view class="detail bg-white">
 			<view class="swiper-box">
@@ -15,38 +15,34 @@
 			</view>
 			<view class="info padding-top-sm padding-bottom-sm padding-right-sm flex solid-bottom margin-left-sm">
 				<view class="flex-sub">
+					<view class="flex justify-between padding-bottom-sm margin-right-sm">
+						<view class="cu-progress radius striped active flex-sub">
+							<view class="bg-red" :style="[{ width: rate < 15 ? '15%' : rate + '%'   }]">{{rate}}%</view>
+						</view>
+						<view class="margin-left-sm">销量{{sales_volume}}</view>
+					</view>
 					<view class="title text-black padding-bottom-xs">{{ PRO.store_name }}</view>
- 					<view class="text-price text-bold text-red text-xl">{{ PRO.price }}</view>
-					<view class="text-price text-gray text-xs margin-top-xs" style="text-decoration: line-through;">{{ PRO.ot_price }}</view>
+					<view class="flex align-end">
+						<view class="title text-black padding-bottom-xs" style="color: red;">地址: {{PRO.address }}</view>
+					</view>
 				</view>
-				<view @tap="action = true" class="share flex flex-direction align-center justify-start">
-					<image src="/static/share.png" style="width: 40upx;height: 40upx;display: block;"></image>
-					<view class="text-xs text-lgrey padding-top-xs">分享</view>
+				<view class="share flex flex-direction align-center justify-start">
+					<userAuth v-if="!userInfo"></userAuth>
+					<image @tap="action = true" src="/static/share.png" style="width: 40upx;height: 40upx;display: block;"></image>
 				</view>
 			</view>
-			<view class="cu-list menu">
+			<view class="cu-list menu padding-bottom-xs">
 				<view class="cu-item spt">
-					<view class="content text-gray">
-						<text class="text-xs">运费</text>
+					<view class="action text-xs text-gray">{{coupon.length}}张优惠券</view>
+					<view class="text-gray linqu">
+						<userAuth v-if="!userInfo"></userAuth>
+						<button class="cu-btn bg-red sm" @tap="t = true">领取优惠券
+						</button>
 					</view>
-					<view class="action text-xs text-gray">剩余{{ _is ? selected.stock : PRO.stock }}</view>
 				</view>
 			</view>
 		</view>
-		<view class="props margin-top-sm">
-			<view class="cu-list menu">
-				<view class="cu-item arrow" @tap="showAttrs" :data-type="2">
-					<view class="content text-left">
-						选择
-					</view>
-				</view>				
-<!-- 				<view class="cu-item arrow" @tap="post = true">
-					<view class="content">
-						<text class="text-df">配送</text>
-					</view>
-				</view>	 -->			
-			</view>
-		</view>
+
 		<view class="title desc bg-white margin-top-sm solid-bottom">
 			<view>商品详情</view>
 		</view>
@@ -56,34 +52,25 @@
 		<view class="tool_wrap">
 			<view class="tool">
 				<view class="cu-bar bg-white tabbar border shop">
+					<navigator class="action" url="/pages/index/index">
+						<view class="cuIcon-homefill text-red"></view>
+						首页
+					</navigator>					
 					<button class="action" open-type="contact">
 						<view class="cuIcon-service text-green">
 							<view class="cu-tag badge"></view>
 						</view>
 						客服
 					</button>
-					<view class="bg-cyan submit" @tap="linkCart">
-						<!-- <view class="cuIcon-cart">
-							<!-- <view class="cu-tag badge">99</view> 
-						</view> -->
-					  进入购物车
+					<view class="submit">
+						<userAuth v-if="!userInfo"></userAuth>
+						<view class="bg-cyan submit" @tap="t = true" :data-type="1">去领取</view>
 					</view>
-					<!-- <view class="action" @tap="linkCart"  style="width:140px;">
-						<view class="cuIcon-cart">
-							<!-- <view class="cu-tag badge">99</view> 
-						</view>
-						
-					</view> -->
-					<view class="bg-black submit" @tap="showAttrs" :data-type="1">加入购物车</view>
-					<!-- <view class="bg-black submit" @tap="showAttrs" :data-type="0">立即订购</view> -->
+					
 				</view>			
 			</view>			
 		</view>
-		
-		
 		<!-- 弹窗 -->
-		
-		
 		<!-- 产品属性 -->
 		<view :class="['props', { show: Attrs }]">
 			<view class="mask" @touchmove.stop.prevent="noEvent" @tap="Attrs = false"></view>
@@ -92,7 +79,6 @@
 					<image :src="PRO.image"></image>
 					<view class="flex-sub margin-left-sm" style="overflow: hidden;">
 						<view class="title text-cut text-sm padding-top-xs padding-bottom-sm">{{ PRO.store_name }}</view>
-						<!-- <view class="text-price text-bold text-df">{{ PRO.price }}</view> -->
 					</view>
 					<view @tap="Attrs = false" class="close round flex solid justify-center align-center line-black margin-tb-sm">
 						<text class="cuIcon-close"></text>
@@ -125,28 +111,9 @@
 					<view v-if="type === 1 || type === 2"  @tap="f" class="flex-sub flex align-center justify-center padding-top-sm padding-bottom-sm bg-red">
 						{{ type === 1 ? '确认' : '加入购物车' }}
 					</view>
-<!-- 					<view v-if="type === 0 || type === 2" @tap="toBuy" class="flex-sub flex align-center justify-center padding-top-sm padding-bottom-sm bg-black">
-						{{ !type ? '下一步' : '立即购买' }}
-					</view> -->
 				</view>
 			</view>
 		</view>
-		<!-- 快递 -->
-<!-- 		<view :class="['showPost', { show: post }]">
-			<view class="mask" @touchmove.stop.prevent="noEvent" @tap="post = false"></view>
-			<view class="contain bg-white flex flex-direction" @touchmove.stop.prevent="noEvent">
-				<view class="title flex align-center justify-center solid-bottom text-df text-black">配送方式</view>
-				<view class="list flex-sub">
-					<scroll-view scroll-y style="height: 100%;">
-						<block>
-							<view class=" solid-bottom item text-black flex align-center padding-left-sm padding-right-sm">快递发货(<text class="text-price">0.00 ~ 999.00</text>)</view>
-						</block>
-					</scroll-view>
-				</view>
-				<button hover-class="none" class="cu-btn bg-black no-round lg" @tap="post = false">我知道了</button>
-			</view>
-		</view> -->
-		<!-- 海报 -->
 		<view :class="['canvas', { show: show }]">
 			<view class="mask" @touchmove.stop.prevent="noEvent" @tap="show = false"></view>
 			<view class="contain" @touchmove.stop.prevent="noEvent">
@@ -171,23 +138,73 @@
 				</block>
 			</view>
 		</view>
+		<view class="cu-modal" :class="{show: showAlert }">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">请输入指令密码</view>
+					<view class="action" @tap="showAlert = false">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view>
+					<form @submit="getCxx">
+						<view class="cu-form-group margin-sm">
+							<input type="text" name="direct" v-model="vDirect" placeholder="请输入向老板索取的指令密码" />
+						</view>
+						<view class="cu-bar bg-white justify-end margin-top-sm">
+							<view class="action">
+								<button class="cu-btn line-green text-green" @tap="showAlert = false">取消</button>
+								<button class="cu-btn bg-green margin-left" form-type="submit">确定</button>
+							</view>
+						</view>						
+					</form>
+				</view>
+			</view>
+		</view>		
+		<model :show="t" @on-close="t = false" title="我的优惠券" :hasList="coupon.length" bgColor="#f1f1f1" v-if="loaded">
+			<view class="list">
+				<view class="item flex margin-bottom-sm flex-direction" v-for="(item, i) in coupon" :key="i">
+					<view style="background:#88dfdb;color:#05a69c ;" class="solid-dash flex-sub text-white padding-left-sm flex justify-between">
+						<view class="flex-sub">
+							<view class="text-black margin-top-xs margin-left-sm text-left">{{ item.title }}</view>
+							<view class="margin-top-xs margin-left-sm text-left">
+								<text style="font-size:44rpx;">{{ item.coupon_price }}</text>元代金券
+								</view>
+							<view class="margin-tb-xs margin-left-sm text-left">满{{ item.use_min_price }}元使用</view>
+							<view class="text-sm text-gray margin-left-sm margin-top-sm text-left" v-if="item.start_time!='0'">
+								有效期：{{ item.start_time }} - {{ item.end_time }}
+							</view>			
+						</view>
+						<view class="margin-top-xl margin-right-xl"><button class="cu-btn bg-white sm shadow" @tap="showDirect(item)">领取</button></view>
+					</view>
+					<view class="coupon-get flex justify-end align-center padding-right-lg padding-left-lg">
+						<view @tap="goCouponDetail" :data-item="item" class="text-cyan">查看优惠详情
+						<text class="cuIcon-right margin-left-xs"></text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</model>
 	</view>
 </template>
 
 <script>
 import uniNumberBox from '@/components/uni-number-box';
-import { ProDetails, addCart } from '@/api'
+import { ProDetails, addCart, getCoupon, CartList } from '@/api'
 import { mapGetters } from 'vuex'
+import Model from '@/components/modal'
+import graceChecker from '@/common/graceChecker'
 export default {
 	name:'proInfo',
 	components: {
-		uniNumberBox
+		uniNumberBox,
+		Model
 	},
 	onShareAppMessage() {
 		return {
 			title: this.PRO.store_name, // 自定义分享标题
 			imageUrl: this.swiperList[0], //自定义分享封面
-			path: `/pages/index/index?scene=${this.userInfo.uid}`, // 之定义分享入口
+			path: `/pages/index/prodetail?scene=${this.userInfo.uid}&id=${this.params.id}`, // 之定义分享入口
 			success: () => {
 				//接口调用成功的回调函数
 			},
@@ -207,10 +224,16 @@ export default {
 	},	
 	data () {
 		return {
+			showAlert: false,
+			t: false,
+			direct: '',
+			vDirect: '',
 			PRO: {},
 			pAttr: [],
 			count: 1,
 			pValue: [],
+			coupon: [],
+			loaded: false,
 			type: 0, // 显示属性的方式
 			Attrs: false, // 显示属性
 			post:false, //显示快递
@@ -228,19 +251,23 @@ export default {
 			h: '',
 			isBtn: false, // 是否显示保存海报按钮
 			//轮播主图数据
-			swiperList: [ // 商品轮播图
-			],
-			//轮播图下标
+			swiperList: [ 
+			], // 商品轮播图
 			currentSwiper: 0, // 轮播位置
 			itemList: ['发送给朋友', '生成海报', ''],
 			params: {
 				id: ''
-			}
+			},
+			sales_volume:'',
+			rate:'',
+			item: ''
 		}
 	},
-	onLoad (options) {
-		this.params.id = options.id
+	onLoad (query) {
+		this.params.id = query.id
+		if (decodeURIComponent(query.scene) !== void 0) this.$store.commit('SET_SPID', decodeURIComponent(query.scene))
 		this.getDetails()
+		uni.hideShareMenu()
 	},
 	computed: {
 		...mapGetters(['userInfo']),
@@ -264,22 +291,62 @@ export default {
 		}		
 	},
 	methods: {
+		goCouponDetail (item) {
+			const cdetail = item.currentTarget.dataset.item.description
+			uni.navigateTo({
+				url: '/user/coupondetail',
+				success: () => {
+					this.$store.commit('SET_CDETAIL', cdetail)
+				}
+			})
+		},
+		showDirect (item) {
+			this.showAlert = true
+			this.vDirect = ''
+			this.item = item
+		},
+		getCxx (e) {
+			const rule = [
+				{ name: 'direct', checkType:'same', checkRule: this.direct, errorMsg: '请输入正确的指令密码' },
+			]
+			const formData = e.detail.value
+			const checkRes = graceChecker.check(formData, rule)
+			if (checkRes) {
+				this.showAlert = false
+				uni.showLoading({ title: '领取中', mask: true })
+				getCoupon({ couponId: this.item.id }).then(res => {
+					uni.hideLoading()
+					uni.showModal({
+						content: res.msg,
+						showCancel: false
+					})
+				})				
+			} else {
+				uni.showToast({ title: graceChecker.error, icon: "none" })
+			}
+		},
 		getDetails () {
 			uni.showLoading({ title: '加载中', mask: true })
 			ProDetails(this.params).then(res => {
 				uni.hideLoading()				
 				const pro = res.data.storeInfo
 				const reg = /\<img/gi
-				const str = '<img style="max-width:100%;height:auto;display:block;"'				
+				const str = '<img style="max-width:100%;height:auto;display:block;"'
+				this.$store.commit('SET_BARSHOW', res.data.barstyle === void 0 ? 0 : res.data.barstyle)				
 				this.PRO = pro
 				this.PRO.description = this.PRO.description.replace(reg, str)
+				this.coupon = res.data.coupon
 				this.pAttr = res.data.productAttr
 				this.swiperList = pro.slider_image.map(item => {
 					item = item.replace('http', 'https')
 					return item
 				})
+				this.direct = pro.direct_code
+				this.sales_volume=res.data.sales_volume
+				this.rate= parseFloat(res.data.rate).toFixed(2)
 				this.pValue = []
 				for (let x in res.data.productValue) this.pValue.push(res.data.productValue[x])	
+				this.loaded = true
 			})
 		},
 		f () {
@@ -289,11 +356,22 @@ export default {
 					const uniqueId = this.selected.unique
 					uni.showLoading({ title: '加载中' })
 					addCart({ productId, uniqueId, cartNum: this.count }).then(res => {
-						uni.hideLoading()
-						uni.showModal({
-							content: '加入成功',
-							showCancel: false
-						})
+						CartList().then(x => {
+							uni.hideLoading()
+							const list = x.data.valid.map(item => {
+								item.attrInfo = item.productInfo.attrInfo
+								item.checked = true
+								return item
+							})
+							uni.navigateTo({
+								url: '/pages/index/create',
+								success: () => {
+									const t = list.filter(item => +item.id === +res.data.cartId)
+									uni.setStorageSync('SET_SHOP', t)
+									uni.setStorageSync('truePrice', t.reduce((total, k) => k.truePrice + total, 0).toFixed(2))
+								}
+							})
+						})					
 					})
 				} else {
 					let attrName = ` ${this.needSelect
@@ -489,7 +567,15 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+.linqu, .share {
+	position: relative;
+	z-index: 99;	
+}
+.share {
+	height: 40rpx;
+	width: 40rpx;
+}
 .mask {
 	position: fixed;
 	top: 0;
@@ -734,4 +820,94 @@ export default {
 		}
 	}
 }
+
+.isCoupon {
+	padding: 30rpx 0;
+	& > view {
+		margin: 0 15rpx;
+		position: relative;
+		image {
+			width: 100%;
+			height: 520rpx;
+		}
+		& > view {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 55;
+			.tit {
+				font-size: 100rpx;
+				margin-top: 130rpx;
+			}
+			.line {
+				position: relative;
+				font-size: 38rpx;
+				margin: 20rpx 0;
+				&::after, &::before {
+					position: absolute;
+					top: 50%;
+					border-top: 4rpx solid var(--black);
+					width: 12vw;
+					content: '';
+				}
+				&::after {
+					left: -14vw;
+				}
+				&::before {
+					right: -14vw;
+				}
+			}
+			.btn {
+				background-color:#ff3738;
+				border-radius: 10rpx;
+				padding: 15rpx 50rpx;
+				font-size: 36rpx;
+				margin-top: 20rpx;
+			}
+		}
+	}
+}
+.list {
+	padding: 15upx 20upx;
+	.item {
+		height: 220upx;
+		position: relative;
+		background-color: white;
+		.solid-dash {
+			border-bottom:2upx dashed #f9f9f9
+		}
+		&::after, &::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			height: 100%;
+			width: 28upx;
+			background-image: radial-gradient(#f1f1f1 0, #f1f1f1 8upx, transparent 8upx);
+			background-size: 28upx 28upx;
+			background-position: 0 4upx;
+			background-repeat: repeat-y;
+			z-index: 1;
+			}
+		&::after {
+			left: -12upx;
+		}	
+		&::before {
+			right: -12upx;
+		}
+		.coupon-get {
+			background-color:white;
+			min-height: 70rpx;
+			height: 70rpx;
+		}
+		.state {
+			position: absolute;
+			width: 100upx;
+			top: 10upx;
+			right: 20upx;
+			height: 100upx;
+		}
+	}
+}	
 </style>

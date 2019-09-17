@@ -1,7 +1,7 @@
 <template>
 	<view class="home">		
 		<view class="page">
-			<index-home v-if="current === 0" @on-tab="change"></index-home>
+			<index-home v-if="current === 0"></index-home>
 			<index-receive v-if="current === 2"></index-receive>
 			<index-share v-if="current === 3"></index-share>
 			<index-classify v-if="current === 1"></index-classify>
@@ -20,6 +20,7 @@
 	import cuBar from './tabBar'
 	import { Scened } from '@/api'
 	import { mapGetters } from 'vuex'
+	import qqMap from '@/utils/qqmap-wx-jssdk.min'
 	export default {
 		name: 'Index',
 		components: { 
@@ -42,11 +43,8 @@
 				path: `/pages/index/index?scene=${this.userInfo.uid}`,
 			}
 		},
-		// onShow() {
-		// 	console.log(this.scene)
-		// },
 		onLoad (query) {
-			this.scene =decodeURIComponent(query.scene)
+			this.scene = decodeURIComponent(query.scene)
 			this.scene = this.scene == 'undefined' ? '' : this.scene
 			const data={
 				query:JSON.stringify(query),
@@ -56,8 +54,51 @@
 			this.$store.commit('SET_SPID', this.scene)
 		},
 		computed: {
-			...mapGetters(['userInfo'])
-		},		
+			...mapGetters(['userInfo', 'address', 'location'])
+		},
+		onShow () {
+			if (!this.location.length) {
+				uni.getLocation({
+					type: 'gcj02',
+					success: res => {
+						const qqmapsdk = new qqMap({ key: 'CRZBZ-4MTK6-Z6DSO-MCI7X-LUTGV-73B5X' })
+						const latitude = res.latitude
+						const longitude = res.longitude
+						this.$store.commit('SET_LOCATION', [res.latitude, res.longitude])
+						qqmapsdk.reverseGeocoder({
+							location: {
+								latitude,
+								longitude
+							},
+							success: addr => {
+								const address = addr.result.address_component.street_number
+								this.$store.commit('SET_ADDRESS', address)
+								this.$store.commit('SET_SHOW', false)
+							}
+						})
+						if (!this.userInfo) {
+							setTimeout(() => {
+								this.show = true
+							}, 1500)
+						}
+					},
+					fail: () => {
+						uni.showModal({
+							content:'附近商家需要您的位置信息来展示',
+							confirmText: '去开启',
+							success: rst => {
+								if (rst.confirm) {
+									uni.openSetting({})
+								}
+							}
+						})
+					}
+				})					
+			}
+		},
+		onReachBottom () {
+			uni.$emit('onLoad')
+		},
 		methods: {
 			change(e) {
 				uni.pageScrollTo({
@@ -69,9 +110,3 @@
 		}
 	}
 </script>
-
-<style lang="less">
-	.page {
-		overflow: hidden;		
-	}
-</style>

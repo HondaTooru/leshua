@@ -11,19 +11,19 @@
 			"style": {
 				"navigationBarTitleText": "商品详情"
 			}
-		},
+		},	
 		{
 			"path": "pages/index/create",
 			"style": {
 				"navigationBarTitleText": "确认订单"
 			}
 		},
-		{
-			"path":"pages/index/active",
-			"style": {
-				"navigationBarTitleText":"激活"
-			}
-		},
+		// {
+		// 	"path":"pages/index/active",
+		// 	"style": {
+		// 		"navigationBarTitleText":"激活"
+		// 	}
+		// },
 		{
 			"path":"pages/index/cardlist",
 			"style": {
@@ -41,7 +41,7 @@
 			"style": {
 				"navigationBarTitleText":"升级通道说明"
 			}
-		}
+		}		
 	],
 	"subPackages": [
 		{
@@ -53,6 +53,12 @@
 						"navigationBarTitleText": "我的订单"
 					}
 				},
+				{
+					"path": "coupondetail",
+					"style": {
+						"navigationBarTitleText": "优惠券详情"
+					}
+				},				
 				{
 					"path": "order/detail",
 					"style": {
@@ -82,7 +88,37 @@
 					"style": {
 						"navigationBarTitleText": "我的钱包"
 					}
-				}
+				},
+				{
+					"path": "coupon",
+					"style": {
+						"navigationBarTitleText": "我的优惠券"
+					}
+				},
+				{
+					"path": "share",
+					"style": {
+						"navigationBarTitleText": "我的分享"
+					}
+				},
+				{
+					"path": "search",
+					"style": {
+						"navigationBarTitleText": "商品搜索"
+					}
+				},
+				{
+					"path": "clist",
+					"style": {
+						"navigationBarTitleText": "优惠券列表"
+					}
+				},
+				{
+					"path":"mindata",
+					"style": {
+						"navigationBarTitleText":"我的入驻资料"
+					}
+				}										
 			]
 		}
 	],

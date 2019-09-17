@@ -2718,7 +2718,7 @@ swiper.square-dot .wx-swiper-dot.wx-swiper-dot-active,
 swiper.square-dot .a-swiper-dot.a-swiper-dot-active,
 swiper.square-dot .uni-swiper-dot.uni-swiper-dot-active {
 	opacity: 1;
-	width: 30upx;
+	/* width: 30upx; */
 }
 
 swiper.round-dot .wx-swiper-dot,
@@ -3466,7 +3466,7 @@ scroll-view.cu-steps .cu-item {
 
 .padding-tb-sm {
 	padding-top: 20upx;
-	padding-bottom: 20upx;
+	padding-bottom: 26upx;
 }
 
 .padding-tb {
@@ -3942,7 +3942,7 @@ scroll-view.cu-steps .cu-item {
 }
 
 .text-xl {
-	font-size: 36upx;
+	font-size: 30upx;
 }
 
 .text-xxl {
@@ -4005,6 +4005,7 @@ scroll-view.cu-steps .cu-item {
 .line-red,
 .lines-red {
 	color: var(--red);
+	font-size: 26upx;
 }
 
 .text-orange,

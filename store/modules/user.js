@@ -7,7 +7,8 @@ const user = {
 		encrypteData: '',
 		iv: '',
 		signature: '',
-		spid: ''
+		spid: '',
+		phone: ''
 	},
 	mutations: {
 		SET_ADDRESSLIST: (state, addressList) => {
@@ -34,6 +35,9 @@ const user = {
 		},
 		SET_SPID: (state, spid) => {
 			state.spid = spid
+		},
+		SET_PHONE: (state, phone) => {
+			state.phone = phone
 		}
 	},
 	actions: {

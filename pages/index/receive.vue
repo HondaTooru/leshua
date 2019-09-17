@@ -7,7 +7,7 @@
 		</cu-head>
 		<view class="padding-sm bg-white shadow-lg">
 			<view class="flex align-center justify-between">
-				<view>派送员榜单</view>
+				<view>会员榜单</view>
 				<view class="cu-avatar-group">
 					<view class="cu-avatar round lg" v-for="(item,index) in pList" :key="index" :style="[{ backgroundImage:'url(' + item.avatar + ')' }]"></view>
 				</view>				
@@ -23,21 +23,21 @@
 				<view class="padding-top-sm text-bold text-black">{{ card.fans }}</view>
 			</navigator>
 			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V1派送员&type=2'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
-				<view>V1派送员</view>
+				<view>V1</view>
 				<view hover-class="none" class="padding-top-sm text-bold text-black">{{card.class_a }}</view>
 			</navigator>
 			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V2派送员&type=3'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
-				<view>V2派送员</view>
+				<view>V2</view>
 				<view class="padding-top-sm text-bold text-black">{{ card.class_b }}</view>
 			</navigator>
 			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V3派送员&type=4'" class="flex-sub text-center padding-top-sm padding-bottom-sm">
-				<view>V3派送员</view>
+				<view>V3</view>
 				<view class="padding-top-sm text-bold text-black">{{ card.class_c }}</view>
 			</navigator>									
 		</view>
-		<view @tap="share" class="flex flex-direction margin-left-sm margin-right-sm margin-top-xl">
+<!-- 		<view @tap="share" class="flex flex-direction margin-left-sm margin-right-sm margin-top-xl">
 			<button class="cu-btn lg bg-red"><text class="cuIcon-forwardfill"></text>查看升级通道介绍</button>
-		</view>
+		</view> -->
 		<view class="cu-modal" :class="{ show }">
 			<view class="cu-dialog bg-white">
 				<view class="cu-bar justify-center">微信授权</view>

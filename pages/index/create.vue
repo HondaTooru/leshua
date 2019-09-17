@@ -42,9 +42,11 @@
 				</view>	 -->			
 			</view>
 		</view>
-		<view class="tool solid-top">
+		<view class="tool solid-top flex justify-between">
+			<view>
 			<view class="text-price text-bold text-red text-xl" v-if="model.is_unified==1">{{ model.u_price }}</view>
-			<view class="text-price text-bold text-red text-xl" v-if="model.is_unified==0"><block>{{truePrice}}</block></view>
+			<view class="text-price text-bold text-red text-xl" v-if="model.is_unified==0"><block>{{truePrice}}</block></view>				
+			</view>
 			<view @tap="submit">去支付</view>
 		</view>		
 	</view>

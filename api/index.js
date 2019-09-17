@@ -1,15 +1,15 @@
 import service from '@/utils/request'
 
 export function BindIndex (data) {
-	return service.post('/routine/Buildapi/index', data)
+	return service.post('/routine/Buildapi/store_index', data)
 }
 
-export function ProList () { // 产品列表
-	return service.get('/routine/Buildapi/get_product_list').then(res => res)
+export function ProList (data) { // 产品列表
+	return service.get('/routine/Buildapi/get_product_list', data).then(res => res)
 }
 
 export function ProDetails (data) { // 产品详情
-	return service.post('/routine/Auth_api/details', data).then(res => res)
+	return service.post('/routine/Buildapi/details', data).then(res => res)
 }
 
 export function wxLogin (data) { // 用户登录
@@ -120,4 +120,47 @@ export function rulesd (data) { //会员活动规则
 
 export function IsBinding (data) {
 	return service.post('/routine/Auth_api/binding', data).then(res => res)
+}
+
+
+export function getIssue (data) { // 获取可以领取的优惠券列表
+	return service.post('/routine/Auth_api/get_issue_coupon_list', data).then(res => res)
+}
+
+export function getCoupon (data) { // 领取优惠券
+	return service.post('/routine/Auth_api/user_get_coupon', data).then(res => res)
+}
+
+export function getCouponOr (data) { // 用户可以使用的优惠券
+	return service.post('/routine/Auth_api/get_use_coupon_order', data).then(res => res)
+}
+
+export function getUseCoupon (data) { // 用户的领取优惠券列表
+	return service.post('/routine/Auth_api/get_use_coupon', data).then(res => res)
+}
+export function getUserCoupon (data) { // 获取用户的优惠券
+	return service.get('/routine/Auth_api/get_use_coupon', data).then(res => res)
+}
+
+export function useCoupon (data) { // 用户点击使用优惠券
+	return service.get('/routine/Auth_api/use_coupon', data).then(res => res)
+}
+export function getMyCoupon (data) { // 获取优惠券
+	return service.get('/routine/Buildapi/coupon_list', data).then(res => res)
+}
+
+export function bindMyPone (data) { // 绑定手机
+	return service.post('/routine/Auth_api/bind_phone', data).then(res => res)
+}
+
+export function Bugrade (data) {
+	return service.post('/routine/Buildapi/upgrade', data).then(res => res)
+}
+
+export function vipData (data) {
+	return service.post('/routine/Auth_api/Settledin', data).then(res => res)
+}
+
+export function setInfo (data) {
+	return service.post('/routine/Auth_api/SettledinInfo', data).then(res => res)
 }

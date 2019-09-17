@@ -62,6 +62,11 @@
             "postcss" : true,
             "minified" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "您的位置将用于展示附近的商家"
+            }
+        }
     }
 }

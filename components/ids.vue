@@ -27,7 +27,7 @@
 	export default {
 		data () {
 			return {
-				spread_uid: '198'
+				spread_uid: ''
 			}
 		},
 		props:{

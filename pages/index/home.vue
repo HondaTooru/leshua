@@ -1,127 +1,217 @@
 <template>
-<view>
-	<cu-custom bgColor="bg-gradual-red">
+<view class="idx">
+	<cu-custom bgColor="bg-white">
 		<block slot="content">派送宝</block>
-	</cu-custom>
-	<view class="bg-lgrey padding-bottom-xl" v-if="Load">
-		<view class="text-bold text-center text-shadow" style="height:200px"><!--title padding-bottom-xl  padding-top-xl padding-left-sm padding-right-sm -->
-			<image :src="commiss.slogan" style="height:200px;width:100%"></image>
-		</view>
-		<view><!-- padding-left-sm padding-right-sm -->
-			<view class="radius" style="background:#ffffff"> <!-- bg-lgray padding-xl -->
-				<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.id" v-for="(item, index) in benefit" :key="index">
-				<image :src="item.image" class="response radius block" style="height: 636upx;"></image>
-				<!-- <view class="text-center padding-top-sm padding-bottom-sm text-black">价值<text class="text-red text-bold">{{ item.ot_price }}</text>{{ item.store_name }} </view>	-->				
-				</navigator>
-				<swiper :indicator-dots="false" :autoplay="true" :interval="3000" :duration="1000" style="height: 710upx;">
-					<swiper-item v-for="(item, index) in give" :key="index">
-						<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.id">
-						<view class="bg-white">
-						<image :src="item.image" style="height:710upx;" class="response siy-radius block"></image>
-						</view>
-						</navigator>					
+	</cu-custom>	
+    <block>
+		<view class="location bg-white">
+			<text class="cuIcon-location padding-right-xs"></text>{{ address }}
+			<text class="cuIcon-right padding-left-xs"></text>
+			</view>
+		<view class="cu-bar search bg-white" :style="{ top: CustomBar + 'px' }">
+			<view class="search-form round">
+				<text class="cuIcon-search"></text>
+				<swiper vertical autoplay circular interval="5000" class="tui-swiper">
+					<swiper-item v-for="(item,index) in hotSearch" :key="index" class="tui-swiper-item" @tap="search">
+						<view class="tui-hot-item">{{item}}</view>
 					</swiper-item>
-				</swiper>
-				<view class="flex flex-direction "><!-- btn -->
-					<userAuth v-if="!userInfo"></userAuth>
-					<image src='/static/button.jpg' style="height:70px;margin:auto;width:230px;margin-top:15px;" @tap="toActive"></image>
-				</view>	
+				</swiper>			
 			</view>
 		</view>
-		<view style="background: #ffffff;">
-			 <view class="title text-df flex justify-center padding-top-sm">
-				<image src='/static/tiaohen.jpg' style="height:70px;margin:auto;width:230px;"></image>
-			</view>
-		</view>	
-	
-		<view class="bg-white sw">
-			<view class="wave bg-white shadow-blur" style="background: #ffffff;">
-				<image src="/static/wave.gif" class="gif-black response"></image>
-			</view>
-			<view class="title text-df flex justify-center padding-top-sm">
-				<text class="line text-black">其他豪品</text>
-			</view>
-			<swiper :autoplay="true" :interval="3000" :duration="1000">
-				<swiper-item v-for="(item, idx) in best" :key="idx">
-					<view class="flex margin-left-sm margin-right-sm margin-top-xl padding-bottom-xl" style="height: 280upx;">
-						<navigator hover-class="none" :url="'/pages/index/prodetail?id='+son.id" class="flex-sub item" v-for="(son, i) in item" :key="i"><image :src="son.image" class="response xh"></image></navigator>
-					</view>
-				</swiper-item>			
+		<view class="slide">
+			<swiper :indicator-dots="false" :current="current" @change="current = $event.detail.current" :autoplay="true" :interval="3000" :duration="1000" circular>
+				<swiper-item v-for="(item, index) in list" :key="index">
+					<image :src="item.pic"></image>
+				</swiper-item>
 			</swiper>
-			<view class="text-red text-center padding-top-sm" @tap="change">更多福利点击这里>></view>
+			<view class="dots flex">
+				<view v-for="(item, index) in list" :key="index" :class="{ act: current === index }"></view>
+			</view>
 		</view>
-	</view>
-	<view class="cu-modal" :class="{ show }">
-		<view class="cu-dialog bg-white">
-			<view class="cu-bar justify-center">微信授权</view>
-			<view class="padding text-left solid-bottom solid-top">
-				派送宝 为了给你提供更好的服务，需要向你申请权限
+		<view class="category">
+			<view class="item" v-for="(item, index) in category" :key="index" @tap="goPro(item)">
+				<image :src="item.pic"></image>
+				<view>{{ item.cate_name }}</view>
 			</view>
-			<view class="padding-sm text-left text-gray solid-bottom">
-				获取你的公开信息（昵称，头像，地区及性别）
+		</view>
+		<view class="bg-white padding-tb-sm" ><image src="/static/t1.jpg" class="tit"></image></view>		
+		<view class="coupon_info bg-white">
+			<swiper :indicator-dots="true" autoplay class="cu-swiper square-dot" circular :interval="3000" :duration="1000">
+				<swiper-item v-for="(item, index) in news" :key="index">
+					<navigator hover-class="none" @tap="goCouponDetail" :data-item="item.description"><image :src="item.image" class="shadow"></image></navigator><!--:url="'/user/coupondetail?id='+item.cid"-->
+				</swiper-item>
+			</swiper>
+		</view>
+		<view class="bg-white" v-if="coupon.length">
+			<swiper :indicator-dots="false" class="coupon shadow" autoplay :interval="3000" :duration="1000" circular>
+				<swiper-item v-for="(item, index) in coupon" :key="index">
+					<view class="swiper-item">
+						<view class="item">
+							<image :src="item.image"></image>		
+						</view>					
+					</view>
+				</swiper-item>
+			</swiper>			
+		</view>
+		<view class="shop">
+			<image src="/static/t2.jpg" class="tit"></image>
+			<view class="list">
+				<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.id" class="item" v-for="item in shop" :key="item.id">
+					<image :src="item.image"></image>
+					<view>
+						<view class="text-black text-lg margin-top-xs text-cut">{{ item.store_name }}</view>
+						<view class="margin-top-xs text-red margin-tb-xs text-cut text-sm">{{ item.address || '' }}</view>
+						<view class="margin-top-xs text-sm">{{ item.cate_name || '' }}</view>
+					</view>
+				</navigator>
 			</view>
-			<view class="flex justify-end">
-				<view class="padding-xs">
-					<button class="cu-btn bg-white" @tap="show = false">拒绝</button>
-					<button class="cu-btn bg-white text-green" open-type="getUserInfo" @getuserinfo="getInfo">允许</button>
+		</view>
+		<view class="cu-modal" :class="{ show }">
+			<view class="cu-dialog bg-white">
+				<view class="cu-bar justify-center">微信授权</view>
+				<view class="padding text-left solid-bottom solid-top">
+					派送宝 为了给你提供更好的服务，需要向你申请权限
+				</view>
+				<view class="padding-sm text-left text-gray solid-bottom">
+					获取你的公开信息（昵称，头像，地区及性别）
+				</view>
+				<view class="flex justify-end">
+					<view class="padding-xs">
+						<button class="cu-btn bg-white" @tap="show = false">拒绝</button>
+						<button class="cu-btn bg-white text-green" open-type="getUserInfo" @getuserinfo="getInfo">允许</button>
+					</view>
 				</view>
 			</view>
-		</view>
-	</view>	
-	<in-ids :show="flag" @on-close="flag = false"></in-ids>
+		</view>	
+		<in-ids :show="flag" @on-close="flag = false"></in-ids>		
+	</block>
+	<empty-data src="/static/shop.png" :type="1" v-if="is_show"></empty-data>
 </view>
 </template>
 
 <script>
-	import { BindIndex } from '@/api'
+	import { BindIndex, getCoupon, ProList } from '@/api'
 	import { mapGetters } from 'vuex'
+	import qqMap from '@/utils/qqmap-wx-jssdk.min'
 	import InIds from '@/components/ids'
 	export default {
 		name: 'Home',		
 		data () {
 			return {
+				CustomBar: this.CustomBar,
 				flag: false,
 				show: false,
-				benefit: [],
-				give: [],
-				best: [],
-				setup: [],
-				commiss: {},
-				Load: false
+				Load: false,
+				current: 0,
+				list: [],
+				hotSearch: [
+					"休闲零食",
+					"自热火锅",
+					"小冰箱迷你"
+				],
+				first: 1,
+				coupon: [],
+				category: [],
+				shop: [],
+				news: []
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo'])
+			...mapGetters(['userInfo', 'location', 'address', 'is_show'])
 		},
 		components: { InIds },
 		created () {
 			uni.showLoading({ mask: true, title:'加载中' })
-			BindIndex().then(res => {
+			BindIndex({ first: this.first }).then(res => {
 				uni.hideLoading()
-				this.Load = true
-				const result = res.data
-				let list = []
-				let arry = []
-				this.benefit = result.benefit
-				this.give = result.give
-				this.commiss = result.commiss
-				this.$store.commit('SET_MODEL', result.setup)
-				result.best.forEach((item, index) => {
-					arry.push(item)
-					if ((index + 1) % 3 === 0) {
-						list.push(arry)
-						arry =[]
-					}
+				this.list = res.data.banner
+				this.coupon = res.data.product_coupon.map(item => {
+					item.coupon_price = +item.coupon_price
+					return item
 				})
-				if (!this.userInfo) {
-					setTimeout(() => {
-						this.show = true
-					}, 1500)
+				this.shop = res.data.list
+				this.category = res.data.parentCategory
+				this.news = res.data.new
+				this.$store.commit('SET_BARSHOW', res.data.barstyle === void 0 ? 0 : res.data.barstyle)
+				if (!this.location.length) {
+					uni.getLocation({
+						type: 'gcj02',
+						success: res => {
+							const qqmapsdk = new qqMap({ key: 'CRZBZ-4MTK6-Z6DSO-MCI7X-LUTGV-73B5X' })
+							const latitude = res.latitude
+							const longitude = res.longitude
+							this.$store.commit('SET_LOCATION', [res.latitude, res.longitude])
+							qqmapsdk.reverseGeocoder({
+								location: {
+									latitude,
+									longitude
+								},
+								success: addr => {
+									const address = addr.result.address_component.street_number
+									this.$store.commit('SET_ADDRESS', address)
+								}
+							})
+							// if (!this.userInfo) {
+							// 	setTimeout(() => {
+							// 		this.show = true
+							// 	}, 1500)
+							// }
+						},
+						fail: () => {
+							this.$store.commit('SET_SHOW', true)
+						}
+					})					
 				}
-				this.best = list
+			})
+			uni.$on('onLoad', async ()=> {
+				uni.showLoading({ title: '加载中' })
+				this.first++
+				const len = await this.action()
+				uni.hideLoading()
+				if (!len && this.first !== 1) {
+					uni.showToast({
+						icon: 'none',
+						title: '没有更多了'
+					})
+				} 
 			})
 		},
+		destroyed () {
+			uni.$off('onLoad')
+		},
 		methods: {
+			goPro (item) {
+				this.$store.commit('SET_CID', item.id)
+				uni.$emit('change', 1)
+			},
+			goCouponDetail (cdeta) {
+				const cdetail = cdeta.currentTarget.dataset.item
+				uni.navigateTo({
+					url: '/user/coupondetail',
+					success: () => {
+						this.$store.commit('SET_CDETAIL', cdetail)
+					}
+				})
+			},
+			getCxx (item) {
+				uni.showLoading({ title: '领取中', mask: true })
+				getCoupon({ couponId: item.id }).then(res => {
+					uni.hideLoading()
+					uni.showModal({
+						content: res.msg,
+						showCancel: false
+					})
+				})
+			},
+			action () {
+				return new Promise(resolove => {
+					ProList({ first: this.first }).then(res => {
+						this.loaded = true
+						this.shop = [...this.shop, ...res.data]
+						resolove(res.data.length)
+					})					
+				})
+			},						
 			async getInfo (e) {
 				if (e.detail.errMsg === 'getUserInfo:ok') {
 					const x = await this.$store.dispatch('wxAuth', e)
@@ -136,9 +226,9 @@
 					})
 				}
 			},
-			toActive () {
+			search () {
 				uni.navigateTo({
-					url: '/pages/index/active'
+					url: '/user/search'
 				})
 			},
 			change () {
@@ -149,101 +239,192 @@
 </script>
 
 <style lang="less">
-	.title {
-		background: linear-gradient(to bottom, #d44a52, #ac1a1f);
-		-webkit-background-clip: text;
-		color: transparent;
-		font-size: 40upx;
-		text-align: center;
+.idx {
+	padding-bottom:100rpx;
+	.location {
+		padding: 10rpx 30rpx 0;
 	}
-.bg-lgray {
-	background: #f0f1f2;
-}
-.btn {
-	position: relative
-}
-.sw {
-	padding-bottom: 120upx;
-	position: relative;
-	margin-top: 56upx;
-	.wave {
-		position: absolute;
+	.search {
+		position: sticky;
+		width: 100%;
+		height: 100rpx;
 		top: 0;
-		left: 0;
-		width: 100%;
-		image {
-			position: relative;
-			height: 140upx;
-			top: -138upx;
+		z-index: 77;
+		.tui-swiper {
+			font-size: 26rpx;
+			height: 60rpx;
+			flex: 1;
+			padding-left: 12rpx;
 		}
-	}
-}
-.xh {
-	height: 100%;
-}
-.item:nth-of-type(2n) {
-	margin-right: 20upx;
-	margin-left: 20upx;
-}
-.pos {
-	position: relative;
-	.bg-round {
-		width: 60upx;
-		height: 60upx;
-		.bg-lgrey;
-		position: absolute;
-		top: 50%;
-		transform: translate3d(0, -50%, 0);
-		border-radius: 50%;
-		&.left {
-			left: -30upx;
-		}
-		&.right {
-			right: -30upx;
-		}
-	}
-	
-}
 
-.siy-radius {
-	border-top-right-radius: 6upx;
-	border-top-left-radius: 6upx;
-}
-.bty-radius {
-	border-bottom-left-radius: 6upx;
-	border-bottom-right-radius: 6upx;
-}
-.bg-siy {
-	background: #f8f8f9;
-}
-.bg-gradual-siy {
-	background:linear-gradient(180deg, #e88888, #e54d42);
-	color: white;
-	margin: 40upx 140upx 20upx;
-}
-.bg-lgrey {
-	background:url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wgARCAACAAIDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQBAQAAAAAAAAAAAAAAAAAAAAP/2gAMAwEAAhADEAAAAF4Uv//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oACAEDAQE/AI//2Q==')
-}
-.line {
-	position: relative;
-	&::after,&::before {
-		position: absolute;
-		content: '';		
-		background:var(--red);				
+		.tui-swiper-item {
+			display: flex;
+			align-items: center;
+		}
+
+		.tui-hot-item {
+			line-height: 26rpx;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			color: #999;
+		}
+		
 	}
-	&::after {
-		bottom: -14upx;
-		height: 6upx;
+	.slide {
+		padding:30rpx 30rpx 20rpx;
+		background-color:var(--white);
+		position: relative;
+		swiper {
+			height: 340rpx;
+			swiper-item {
+				padding: 0 10rpx;
+				box-sizing: border-box;
+				image {
+					width: 100%;
+					height: 100%;
+					border-radius: 15rpx;
+				}					
+			}
+		}
+		.dots {
+			position: absolute;
+			background-color: rgba(0, 0, 0, .6);
+			padding: 10rpx 15rpx;
+			bottom: 45rpx;
+			border-radius: 25rpx;
+			right: 55rpx;
+			& > view {
+				background-color: rgba(255, 255, 255, .4);
+				height: 15rpx;
+				width: 15rpx;
+				border-radius: 50%;
+				margin-right: 10rpx;
+				will-change: background-color;
+				transition-duration: .4s;
+				&.act {
+					background-color: white;
+				}
+				&:last-of-type {
+					margin-right: 0
+				}
+			}
+		}
+	}
+	.category {
+		display: flex;
+		flex-wrap: wrap;
+		background-color: var(--white);
+		padding-bottom: 25rpx;
+		& > .item {
+			width: 20%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding-top: 25rpx;
+			& > view {
+				font-size: 13px;
+				margin-top:10rpx; 
+			}
+			image {
+				height: 88rpx;
+				width: 88rpx;
+				display: block;
+			}
+		}
+	}
+	.tit {
 		width: 100%;
-		left: 0;
-		border-radius: 50upx;
+		height: 65rpx;
+		display: block;
 	}
-	&::before {
-		height: 10upx;
-		width: 10upx;
-		border-radius: 50%;
-		right: -30upx;
-		bottom: -16upx;
+	.coupon {
+		padding: 0 15rpx;
+		height: 500rpx;
+		swiper-item {
+			padding: 0 15rpx;
+			box-sizing: border-box;
+			background-color:var(--white);
+			.item {
+				width: 100%;
+				border-radius: 15rpx;
+				overflow: hidden;
+				position: relative;
+				& > image {
+					width: 100%;
+					height: 500rpx;
+				}
+				& > view {
+					z-index: 88;
+					position: absolute;
+					color:white;					
+					&.tag {
+						background-color:#fe6d49;
+						top:0;
+						left: 0;
+						border-bottom-right-radius: 10rpx;						
+					}
+					&.price {
+						bottom: 15rpx;
+						left: 15rpx;
+						.btn {
+							border-radius: 25rpx;
+							padding: 10rpx 20rpx;
+							&.yellow {
+								background-color: #fdc753;
+							}
+							&.orange {
+								background-color: #fe878c;
+							}
+						}
+					}
+				}
+			}			
+		}
+	}
+	.coupon_info {
+		padding: 0 0 15rpx;
+		swiper {
+			height: 450rpx;
+			swiper-item {
+				padding: 0 30rpx;
+				box-sizing: border-box;
+				image {
+					height: 450rpx;
+					width: 100%;
+					border-radius: 15rpx;
+				}
+			}
+		}
+	}
+	.shop {
+		background-color: var(--white);
+		padding: 40rpx 0 20rpx;
+		.list {
+			padding: 30rpx 30rpx 20rpx 30rpx;
+			box-sizing: border-box;
+			display:flex;
+			flex-wrap:wrap;
+			.item {
+				display: flex;
+				padding-bottom: 25rpx;
+				flex-direction:column;
+				width: calc(50vw - 40rpx);
+				box-sizing: border-box;
+				& > image {
+					width: calc(50vw - 40rpx);
+					height: calc(50vw - 40rpx);
+					border-radius: 15px;
+				}
+				& > view {
+					flex: 1;
+				}
+				&:nth-of-type(2n + 1) {
+					margin-right: 20rpx;
+				}
+			}
+		}
 	}
 }
 </style>

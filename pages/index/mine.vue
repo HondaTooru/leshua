@@ -1,11 +1,14 @@
 <template>
 	<view>
+		<cu-custom bgColor="bg-gradual-red">
+			<block slot="content">我的</block>
+		</cu-custom>		
 		<cu-head>
 			<userAuth v-if="!userInfo"></userAuth>
 			<view class="cu-avatar round xl bg-white" :style="{ backgroundImage: 'url('+avatar+')' }">
 				<text class="avatar-text" v-if="!userInfo">LOGIN</text>
 			</view>
-			<view class="text-df padding-top-xl padding-bottom-sm flex justify-center flex-direction">
+			<view class="text-df padding-top-lg padding-bottom-sm flex justify-center flex-direction">
 				<block v-if="userInfo">
 					<view class="text-center">{{ userInfo.nickname }}</view>
 					<view class="margin-top-sm">ID:{{ userInfo.uid }}</view>
@@ -25,10 +28,11 @@
 			</view>
 			<view class="action">
 				<button class="cu-btn bg-red shadow sm" @tap="toCash">去提现</button>
+				<button class="cu-btn bg-cyan shadow sm margin-left-sm" open-type="getPhoneNumber" @getphonenumber="bindPhone" v-if="userInfo && !phone">绑定手机</button>
 			</view>
 		</view>
 		<view class="list">
-			<view class="item order">
+<!-- 			<view class="item order">
 				<navigator hover-class="none" url="/user/order/list?type=-2">
 					<view><text class="cuIcon-text text-red padding-right-xs"></text>我的订单</view>
 					<view>查看全部订单</view>
@@ -50,26 +54,31 @@
 						<image src="/static/orderCom.png" class="icon"></image>
 						<view class="text">已签收</view>
 					</navigator>
-					<!-- <navigator hover-class="none" url="/user/order/list?type=4">
-						<image src="/static/orderCom.png" class="icon"></image>
-						<view class="text">评论</view>
-					</navigator> -->
 				</view>
-			</view>
+			</view> -->
+			<view class="item">
+				<navigator hover-class="none" url="/user/mindata"><view><text class="cuIcon-form text-green padding-right-xs"></text>我的入驻资料</view></navigator>
+			</view>			
 			<view class="item">
 				<navigator hover-class="none" url="/user/money"><view><text class="cuIcon-moneybagfill text-cyan padding-right-xs"></text>我的钱包</view></navigator>
 			</view>
 			<view class="item">
 				<navigator hover-class="none" url="/user/address"><view><text class="cuIcon-location text-black padding-right-xs"></text>我的地址</view></navigator>
-			</view>		
+			</view>	
+			<view class="item">
+				<navigator hover-class="none" url="/user/clist"><view><text class="cuIcon-ticket text-red padding-right-xs"></text>我的优惠券</view></navigator>
+			</view>
+			<view class="item">
+				<navigator hover-class="none" url="/user/share"><view><text class="cuIcon-link text-brown padding-right-xs"></text>我的分享</view></navigator>
+			</view>								
 			<view @tap="showRule" class="flex flex-direction margin-left-sm margin-right-sm margin-top-xl">
-				<button class="cu-btn lg bg-red"><text class="cuIcon-forwardfill"></text>派送员激活说明</button>
+				<button class="cu-btn lg bg-red"><text class="cuIcon-forwardfill"></text>优惠券使用说明</button>
 			</view>
 		</view>
 		<view class="cu-modal" :class="{ show: show }">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
-					<view class="content">派送员激活说明</view>
+					<view class="content">优惠券使用说明</view>
 					<view class="action" @tap="show = false">
 						<text class="cuIcon-close text-red"></text>
 					</view>
@@ -85,7 +94,7 @@
 <script>
 	import cuHead from '@/components/head'
 	import { mapGetters, mapActions } from 'vuex'
-	import {rulesd} from '@/api'
+	import {rulesd, bindMyPone} from '@/api'
 	export default {
 
 		data () {
@@ -108,7 +117,7 @@
 			
 		},
 		computed: {
-			...mapGetters(['userInfo']),
+			...mapGetters(['userInfo', 'phone']),
 			avatar () {
 				let AVATAR = this.userInfo ? this.userInfo.avatar : ''
 				return AVATAR
@@ -120,6 +129,16 @@
 				uni.navigateTo({
 					url: '/pages/index/cash'
 				})
+			},
+			bindPhone (res) {
+				uni.showLoading({ title: '加载中', mask: true })
+				bindMyPone(res.detail).then(result => {
+					uni.hideLoading()
+					
+				})
+			},
+			change () {
+				uni.$emit('change',3)
 			},
 			toList (item) {
 				if (item.act) {
@@ -142,7 +161,7 @@
 .list {
 	padding-bottom: 120upx;
 	.item {
-			& > navigator {
+			& > navigator, & > view {
 				padding: 0 30upx;
 				display: flex;
 				justify-content: space-between;
@@ -163,22 +182,6 @@
 						color: var(--gray)
 					}
 				}
-				&:after {
-					position: absolute;
-					top: 0;
-					right: 30upx;
-					bottom: 0;
-					display: block;
-					margin: auto;
-					width: 30upx;
-					height: 30upx;
-					color: #666;
-					content: "\E6A3";
-					text-align: center;
-					font-size: 34upx;
-					font-family: cuIcon;
-					line-height: 30upx;				
-				}
 				&::before {
 					position: absolute;
 					content: '';
@@ -195,7 +198,7 @@
 		& > view {
 			display: flex;
 			align-items: center;
-			justify-content:center;
+			justify-content: space-between;
 			padding: 20upx 0;
 			overflow:hidden;
 			background-color:var(--white);
@@ -218,6 +221,30 @@
 		}
 		&.order {
 			margin-bottom: 20upx;
+			& > view {
+				padding: 25upx 0;
+				height: auto;
+			}
+		}
+		&:not(.order) {
+			& > navigator, & > view {
+				&:after {
+					position: absolute;
+					top: 0;
+					right: 30upx;
+					bottom: 0;
+					display: block;
+					margin: auto;
+					width: 30upx;
+					height: 30upx;
+					color: #666;
+					content: "\E6A3";
+					text-align: center;
+					font-size: 34upx;
+					font-family: cuIcon;
+					line-height: 30upx;				
+				}				
+			}
 		}
 	}
 }
