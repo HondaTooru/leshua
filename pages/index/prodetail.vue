@@ -141,7 +141,7 @@
 		<view class="cu-modal" :class="{show: showAlert }">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
-					<view class="content">请输入指令密码</view>
+					<view class="content">请输入领券码</view>
 					<view class="action" @tap="showAlert = false">
 						<text class="cuIcon-close text-red"></text>
 					</view>
@@ -149,7 +149,7 @@
 				<view>
 					<form @submit="getCxx">
 						<view class="cu-form-group margin-sm">
-							<input type="text" name="direct" v-model="vDirect" placeholder="请输入向老板索取的指令密码" />
+							<input type="text" name="direct" v-model="vDirect" placeholder="领券码" />
 						</view>
 						<view class="cu-bar bg-white justify-end margin-top-sm">
 							<view class="action">
@@ -171,7 +171,7 @@
 								<text style="font-size:44rpx;">{{ item.coupon_price }}</text>元代金券
 								</view>
 							<view class="margin-tb-xs margin-left-sm text-left">满{{ item.use_min_price }}元使用</view>
-							<view class="text-sm text-gray margin-left-sm margin-top-sm text-left" v-if="item.start_time!='0'">
+							<view class="text-sm text-black margin-left-sm margin-tb-sm text-left" v-if="item.start_time!='0'">
 								有效期：{{ item.start_time }} - {{ item.end_time }}
 							</view>			
 						</view>
@@ -570,7 +570,7 @@ export default {
 <style lang="less" scoped>
 .linqu, .share {
 	position: relative;
-	z-index: 99;	
+	z-index: 9;	
 }
 .share {
 	height: 40rpx;
@@ -872,7 +872,7 @@ export default {
 .list {
 	padding: 15upx 20upx;
 	.item {
-		height: 220upx;
+		min-height: 220upx;
 		position: relative;
 		background-color: white;
 		.solid-dash {
