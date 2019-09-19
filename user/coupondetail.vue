@@ -9,7 +9,7 @@
 				<rich-text :nodes="nodes"></rich-text>
 			</view>			
 		</block>
-		<view class="bg-white">
+		<view class="bg-white" v-else>
 			<empty-data></empty-data>
 		</view>
 	</view>

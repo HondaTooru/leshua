@@ -30,7 +30,7 @@
 					<userAuth v-if="!userInfo"></userAuth>
 					<image @tap="action = true" src="/static/share.png" style="width: 40upx;height: 40upx;display: block;"></image>
 				</view>
-			</view>
+			</view>			
 			<view class="cu-list menu padding-bottom-xs">
 				<view class="cu-item spt">
 					<view class="action text-xs text-gray">{{coupon.length}}张优惠券</view>
@@ -161,24 +161,27 @@
 				</view>
 			</view>
 		</view>		
-		<model :show="t" @on-close="t = false" title="我的优惠券" :hasList="coupon.length" bgColor="#f1f1f1" v-if="loaded">
+		<model :show="t" @on-close="t = false" title="优惠券" :hasList="coupon.length" bgColor="#f1f1f1" v-if="loaded">
+			<view class="head block response">
+				<image src="/static/c_c.jpg"></image>
+			</view>			
 			<view class="list">
 				<view class="item flex margin-bottom-sm flex-direction" v-for="(item, i) in coupon" :key="i">
-					<view style="background:#88dfdb;color:#05a69c ;" class="solid-dash flex-sub text-white padding-left-sm flex justify-between">
-						<view class="flex-sub">
-							<view class="text-black margin-top-xs margin-left-sm text-left">{{ item.title }}</view>
+					<view style="background:rgb(3,150,251);" class="solid-dash flex-sub text-white padding-left-sm flex justify-between">
+						<view class="flex-sub line margin-tb-sm">
+							<view class="text-white margin-top-xs margin-left-sm text-left">{{ item.title }}</view>
 							<view class="margin-top-xs margin-left-sm text-left">
-								<text style="font-size:44rpx;">{{ item.coupon_price }}</text>元代金券
+								<text class="text-xxl padding-right-xs">{{ item.coupon_price }}</text>元代金券
 								</view>
 							<view class="margin-tb-xs margin-left-sm text-left">满{{ item.use_min_price }}元使用</view>
 							<view class="text-sm text-black margin-left-sm margin-tb-sm text-left" v-if="item.start_time!='0'">
 								有效期：{{ item.start_time }} - {{ item.end_time }}
 							</view>			
 						</view>
-						<view class="margin-top-xl margin-right-xl"><button class="cu-btn bg-white sm shadow" @tap="showDirect(item)">领取</button></view>
+						<view class="flex align-center margin-right-xl margin-left-xl"><button class="cu-btn bg-white shadow" @tap="showDirect(item)">领取</button></view>
 					</view>
 					<view class="coupon-get flex justify-end align-center padding-right-lg padding-left-lg">
-						<view @tap="goCouponDetail" :data-item="item" class="text-cyan">查看优惠详情
+						<view @tap="goCouponDetail" :data-item="item" style="color:rgb(3,150,251)">查看优惠详情
 						<text class="cuIcon-right margin-left-xs"></text>
 						</view>
 					</view>
@@ -568,6 +571,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.head {
+	image {
+		width: 100%;
+		display: block
+	}
+}	
 .linqu, .share {
 	position: relative;
 	z-index: 9;	
@@ -907,6 +916,9 @@ export default {
 			top: 10upx;
 			right: 20upx;
 			height: 100upx;
+		}
+		.line {
+			border-right: dashed white 1rpx;
 		}
 	}
 }	
