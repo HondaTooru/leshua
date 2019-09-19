@@ -5,7 +5,7 @@
 			<block slot="content">优惠券</block>
 		</cu-custom>
 		<view class="head">
-			<image src="/static/c_c.jpg"></image>
+			<image src="/static/c_j.jpg"></image>
 		</view>
 		<view class="list">
 			<view class="item shadow-lg" v-for="(item, index) in list" :key="index">
@@ -20,7 +20,7 @@
 						</view>
 
 					</view>
-				    <view class="btn" v-if="item.status==0" @tap="useCoupon(item.id,index)">点击使用</view>
+				    <view class="btn" v-if="item.status==0" @tap="useCoupon(item.id,index)">点击抵扣</view>
 			        <view class="btn" v-if="item.status==1">已使用</view>
 					<view class="btn" v-if="item.status==2">已过期</view>
 				</view>
@@ -130,7 +130,7 @@
 				.btn {
 					background-color:#0096ff;
 					color: white;
-					box-shadow:0px 0px 10rpx var(--white);
+					box-shadow:0px 0px 10rpx var(--red);
 					padding: 10rpx 15rpx;
 					border-radius: 10rpx;
 				}
