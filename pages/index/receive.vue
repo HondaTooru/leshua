@@ -22,15 +22,15 @@
 				<view>粉丝</view>
 				<view class="padding-top-sm text-bold text-black">{{ card.fans }}</view>
 			</navigator>
-			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V1派送员&type=2'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
+			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V1&type=2'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
 				<view>V1</view>
 				<view hover-class="none" class="padding-top-sm text-bold text-black">{{card.class_a }}</view>
 			</navigator>
-			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V2派送员&type=3'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
+			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V2&type=3'" class="flex-sub text-center padding-top-sm padding-bottom-sm solid-right">
 				<view>V2</view>
 				<view class="padding-top-sm text-bold text-black">{{ card.class_b }}</view>
 			</navigator>
-			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V3派送员&type=4'" class="flex-sub text-center padding-top-sm padding-bottom-sm">
+			<navigator hover-class="none" :url="'/pages/index/cardlist?title=V3&type=4'" class="flex-sub text-center padding-top-sm padding-bottom-sm">
 				<view>V3</view>
 				<view class="padding-top-sm text-bold text-black">{{ card.class_c }}</view>
 			</navigator>									

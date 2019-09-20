@@ -44,7 +44,7 @@
 		</view>
 
 		<view class="title desc bg-white margin-top-sm solid-bottom">
-			<view>商品详情</view>
+			<view>商铺详情</view>
 		</view>
 		<view class="content">
 			<rich-text :nodes="PRO.description"></rich-text>
