@@ -38,7 +38,7 @@
 		<view class="coupon_info bg-white">
 			<swiper :indicator-dots="true" autoplay class="cu-swiper square-dot" circular :interval="3000" :duration="1000">
 				<swiper-item v-for="(item, index) in news" :key="index">
-					<navigator hover-class="none" @tap="goCouponDetail" :data-item="item.description"><image :src="item.image" class="shadow"></image></navigator><!--:url="'/user/coupondetail?id='+item.cid"-->
+					<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.pid"><image :src="item.image" class="shadow"></image></navigator><!--:url="'/user/coupondetail?id='+item.cid"-->
 				</swiper-item>
 			</swiper>
 		</view>
