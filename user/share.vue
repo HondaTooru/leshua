@@ -36,7 +36,7 @@
 		<view class="cu-modal" :class="modalName=='Image'?'show':''">
 			<view class="cu-dialog">
 				<view class="img">
-					<image src="/static/share_bg.png" class="bg"></image>
+					<image src="/static/share_bg.jpg" class="bg"></image>
 					<image :src="CODE" class="code"></image>
 				</view>
 				<view class="cuIcon-close text-white close" @tap="modalName = null"></view>
@@ -120,10 +120,11 @@
 	z-index: 33;
 }
 .bg {
-    height:82vh;
+    height:78vh;
 	width: 100%;
 	position: relative;
 	z-index: 11;
+	display: block;
 }
 .code {
 	position: absolute;
