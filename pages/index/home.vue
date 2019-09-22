@@ -21,7 +21,7 @@
 		<view class="slide">
 			<swiper :indicator-dots="false" :current="current" @change="current = $event.detail.current" :autoplay="true" :interval="3000" :duration="1000" circular>
 				<swiper-item v-for="(item, index) in list" :key="index">
-					<image :src="item.pic"></image>
+					<image :src="item.pic" @tap="linkTo(item)"></image>
 				</swiper-item>
 			</swiper>
 			<view class="dots flex">
@@ -38,7 +38,7 @@
 		<view class="coupon_info bg-white">
 			<swiper :indicator-dots="true" autoplay class="cu-swiper square-dot" circular :interval="3000" :duration="1000">
 				<swiper-item v-for="(item, index) in news" :key="index">
-					<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.pid"><image :src="item.image" class="shadow"></image></navigator><!--:url="'/user/coupondetail?id='+item.cid"-->
+					<navigator hover-class="none" :url="item.pid ? '/pages/index/prodetail?id='+item.pid : ''"><image :src="item.image" class="shadow"></image></navigator><!--:url="'/user/coupondetail?id='+item.cid"-->
 				</swiper-item>
 			</swiper>
 		</view>
@@ -46,9 +46,9 @@
 			<swiper :indicator-dots="false" class="coupon shadow" autoplay :interval="3000" :duration="1000" circular>
 				<swiper-item v-for="(item, index) in coupon" :key="index">
 					<view class="swiper-item">
-						<view class="item">
+						<navigator hover-class="none" :url="item.pid ? '/pages/index/prodetail?id='+item.pid : ''" class="item">
 							<image :src="item.image"></image>		
-						</view>					
+						</navigator>					
 					</view>
 				</swiper-item>
 			</swiper>			
@@ -180,6 +180,13 @@
 			uni.$off('onLoad')
 		},
 		methods: {
+			linkTo (item) {
+				if (item.pid) {
+					uni.navigateTo({
+						url: `/pages/index/prodetail?id=`+item.pid
+					})					
+				}
+			},
 			goPro (item) {
 				this.$store.commit('SET_CID', item.id)
 				uni.$emit('change', 1)
