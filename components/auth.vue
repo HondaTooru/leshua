@@ -24,10 +24,10 @@
 						this.show = true
 					}
 				} else {
-					uni.showModal({
-						content: '授权失败',
-						showCancel: false
-					})
+					// uni.showModal({
+					// 	content: '授权失败',
+					// 	showCancel: false
+					// })
 				}
 			}
 		}

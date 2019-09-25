@@ -121,15 +121,15 @@ service.interceptor.response(response => {
 		} else {
 			uni.hideLoading()
 			reject(result.msg)
-			if (result.msg) {
-				uni.showModal({
-					content: result.msg,
-					showCancel: false,
-					success: rst => {
-						if (!str.includes(result.msg)) uni.navigateBack() 
-					}
-				})				
-			}
+			// if (result.msg) {
+			// 	uni.showModal({
+			// 		content: result.msg,
+			// 		showCancel: false,
+			// 		success: rst => {
+			// 			if (!str.includes(result.msg)) uni.navigateBack() 
+			// 		}
+			// 	})				
+			// }
 		}		
 	})
 })

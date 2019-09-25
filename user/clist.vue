@@ -4,35 +4,38 @@
 			<block slot="backText">返回</block>
 			<block slot="content">优惠券</block>
 		</cu-custom>
-		<view class="head">
-			<image src="/static/c_j.jpg"></image>
-		</view>
-		<view class="list">
-			<view class="item shadow-lg" v-for="(item, index) in list" :key="index">
-				<view class="top flex justify-between align-center">
-					<view class="flex">
-						<image class="bg-white cu-avatar xl radius margin-right" :src="item.image"></image>
-						<view>
-							<view class="text-white" style="font-size:22rpx">{{ item.coupon_title }}</view>
-							<view class="text-white text-xl">{{ item.coupon_price }}元代金券</view>
-							<view class="text-white margin-tb-xs">满{{ item.use_min_price }}元使用</view>
-							<view class="text-white text-xl">剩余有效次数：{{item.frequency}}次</view>
-						</view>
-
-					</view>
-				    <view class="btn" v-if="item.status==0" @tap="useCoupon(item.id,index)">点击抵扣</view>
-			        <view class="btn" v-if="item.status==1">已使用</view>
-					<view class="btn" v-if="item.status==2">已过期</view>
-				</view>
-				
-				<view class="bottom" v-if="item.status==0||item.status==2">
-					<uni-count-down :day="item.days" :hour="item.hours" :minute="item.minutes" :second="item.seconds" color="#fff" background-color="#0096ff" border-color="#ebebeb" />
-				</view>
-				<view class="bottom" v-if="item.status==1">
-					使用时间:{{ item.use_time }}
-				</view>
+		<block v-if="list.length">
+			<view class="head">
+				<image src="/static/c_j.jpg"></image>
 			</view>
-		</view>
+			<view class="list">
+				<view class="item shadow-lg" v-for="(item, index) in list" :key="index">
+					<view class="top flex justify-between align-center">
+						<view class="flex">
+							<image class="bg-white cu-avatar xl radius margin-right" :src="item.image"></image>
+							<view>
+								<view class="text-white" style="font-size:22rpx">{{ item.coupon_title }}</view>
+								<view class="text-white text-xl">{{ item.coupon_price }}元代金券</view>
+								<view class="text-white margin-tb-xs">满{{ item.use_min_price }}元使用</view>
+								<view class="text-white text-xl">剩余有效次数：{{item.frequency}}次</view>
+							</view>
+
+						</view>
+						<view class="btn" v-if="item.status==0" @tap="useCoupon(item.id,index)">点击抵扣</view>
+						<view class="btn" v-if="item.status==1">已使用</view>
+						<view class="btn" v-if="item.status==2">已过期</view>
+					</view>
+					
+					<view class="bottom" v-if="item.status==0||item.status==2">
+						<uni-count-down :day="item.days" :hour="item.hours" :minute="item.minutes" :second="item.seconds" color="#fff" background-color="#0096ff" border-color="#ebebeb" />
+					</view>
+					<view class="bottom" v-if="item.status==1">
+						使用时间:{{ item.use_time }}
+					</view>
+				</view>
+			</view>			
+		</block>
+		<empty-data v-else></empty-data>
 	</view>
 </template>
 

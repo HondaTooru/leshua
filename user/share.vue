@@ -66,7 +66,7 @@
 				query:JSON.stringify(query),
 				scene: this.scene
 			}
-			Scened(data).then(res => {})
+			//Scened(data).then(res => {})
 			this.$store.commit('SET_SPID', this.scene)
 		},		
 		computed: {
