@@ -168,7 +168,7 @@
 	position: absolute;
 	width: 100%;
 	left: 0;
-	bottom: calc(100rpx + env(safe-area-inset-bottom) / 2);
+	bottom: calc(50rpx); // env(300rpx+safe-area-inset-bottom) / 2
 	overflow: hidden;
 }	
 .list {

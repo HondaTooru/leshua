@@ -104,14 +104,10 @@
 				Load: false,
 				current: 0,
 				list: [],
-				hotSearch: [
-					"休闲零食",
-					"自热火锅",
-					"小冰箱迷你"
-				],
 				first: 1,
 				coupon: [],
 				category: [],
+				hotSearch: [],
 				shop: [],
 				news: []
 			}
@@ -130,6 +126,7 @@
 					return item
 				})
 				this.shop = res.data.list
+				this.hotSearch = res.data.list.map(item => item.store_name)
 				this.category = res.data.parentCategory
 				this.news = res.data.new
 				this.$store.commit('SET_BARSHOW', res.data.barstyle === void 0 ? 0 : res.data.barstyle)

@@ -77,6 +77,7 @@
 			useCoupon (id,index) {
                 uni.showModal({
                     content: '请让老板点击确定按钮，该优惠券才可使用？',
+					confirmText:'抵扣',
                     success: rst => {
                         if (rst.confirm) {
                             uni.showLoading({ title: '载入中' })
@@ -85,10 +86,11 @@
 								if(this.list[index]['frequency']==1){
                                     this.list[index]['status']=1;
                                     this.list[index]['frequency']=0;
-                                    uni.hideLoading()
+                                    uni.hideLoading();
                                     uni.showToast({
                                         title: '保存成功'
                                     })
+									this.getList()
                                 }else{
                                     this.list[index]['frequency']=this.list[index]['frequency']-1;
                                     uni.hideLoading()

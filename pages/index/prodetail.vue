@@ -15,12 +15,12 @@
 			</view>
 			<view class="info padding-top-sm padding-bottom-sm padding-right-sm flex solid-bottom margin-left-sm">
 				<view class="flex-sub">
-					<view class="flex justify-between padding-bottom-sm margin-right-sm">
+<!-- 					<view class="flex justify-between padding-bottom-sm margin-right-sm">
 						<view class="cu-progress radius striped active flex-sub">
 							<view class="bg-red" :style="[{ width: rate < 15 ? '15%' : rate + '%'   }]">{{rate}}%</view>
 						</view>
 						<view class="margin-left-sm">销量{{sales_volume}}</view>
-					</view>
+					</view> -->
 					<view class="title text-black padding-bottom-xs">{{ PRO.store_name }}</view>
 					<view class="flex align-end">
 						<view class="title text-black padding-bottom-xs" style="color: red;">地址: {{PRO.address }}</view>
@@ -318,11 +318,11 @@ export default {
 				this.showAlert = false
 				uni.showLoading({ title: '领取中', mask: true })
 				getCoupon({ couponId: this.item.id }).then(res => {
-					uni.hideLoading()
 					uni.showModal({
 						content: res.msg,
 						showCancel: false
 					})
+					uni.hideLoading()
 				})				
 			} else {
 				uni.showToast({ title: graceChecker.error, icon: "none" })
