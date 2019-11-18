@@ -76,7 +76,7 @@
 			},
 			useCoupon (id,index) {
                 uni.showModal({
-                    content: '请让老板点击确定按钮，该优惠券才可使用？',
+                    content: '确定抵扣？',
 					confirmText:'抵扣',
                     success: rst => {
                         if (rst.confirm) {

@@ -16,10 +16,10 @@
 			<view class="info padding-top-sm padding-bottom-sm padding-right-sm flex solid-bottom margin-left-sm">
 				<view class="flex-sub">
 					<view class="flex justify-between padding-bottom-sm margin-right-sm">
-						<view class="text-sm text-purple">点击量：1000</view>
-						<view class="text-sm text-brown">发行量：1000</view>
-						<view class="text-sm text-mauve">使用量：1000</view>
-						<view class="text-sm">剩余量：1000</view>
+						<view class="text-sm text-purple">点击量：{{ clickCount }}</view>
+						<view class="text-sm text-brown">发行量：{{ totalCount }}</view>
+						<view class="text-sm text-mauve">使用量：{{ salesVolume }}</view>
+						<view class="text-sm">剩余量：{{ totalCount - salesVolume }}</view>
 <!-- 						<view class="cu-progress radius striped active flex-sub">
 							<view class="bg-red" :style="[{ width: rate < 15 ? '15%' : rate + '%'   }]">{{rate}}%</view>
 						</view>
@@ -32,7 +32,10 @@
 				</view>
 				<view class="share flex flex-direction align-center justify-start">
 					<userAuth v-if="!userInfo"></userAuth>
-					<image @tap="action = true" src="/static/share.png" style="width: 40upx;height: 40upx;display: block;"></image>
+					<view class="flex flex-direction">
+						<image @tap="action = true" src="/static/share.png" style="width: 40upx;height: 40upx;display: block;"></image>
+						<text class="text-xs">分享</text>
+					</view>
 				</view>
 			</view>			
 			<view class="cu-list menu padding-bottom-xs">
@@ -267,7 +270,10 @@ export default {
 			},
 			sales_volume:'',
 			rate:'',
-			item: ''
+			item: '',
+			clickCount: 0,
+			salesVolume: 0,
+			totalCount: 0
 		}
 	},
 	onLoad (query) {
@@ -341,6 +347,9 @@ export default {
 				const str = '<img style="max-width:100%;height:auto;display:block;"'
 				this.$store.commit('SET_BARSHOW', res.data.barstyle === void 0 ? 0 : res.data.barstyle)				
 				this.PRO = pro
+				this.clickCount = +res.data.click_count
+				this.salesVolume = +res.data.sales_volume
+				this.totalCount = +res.data.total_count
 				this.PRO.description = this.PRO.description.replace(reg, str)
 				this.coupon = res.data.coupon
 				this.pAttr = res.data.productAttr
@@ -586,8 +595,11 @@ export default {
 	z-index: 9;	
 }
 .share {
-	height: 40rpx;
-	width: 40rpx;
+	height: 80rpx;
+	width: 50rpx;
+	text {
+		margin-top: 5rpx;
+	}
 }
 .mask {
 	position: fixed;
