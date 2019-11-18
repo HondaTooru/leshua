@@ -13,7 +13,8 @@
 					</view>
 				</view>
 			</view>	
-		</view>		
+		</view>
+		<empty-data v-if="loaded && !list.length"></empty-data>
 	</scroll-view>
 </view>
 </template>

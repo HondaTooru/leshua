@@ -59,7 +59,6 @@
 					if (idx === 3) idx += 1
 				}
 				item.checked = true
-				console.log(idx)
 				this.$emit('on-change', idx)
 				if (index === 1) this.$store.commit('SET_CID', '')
 			}			

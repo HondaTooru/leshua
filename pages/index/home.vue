@@ -29,10 +29,17 @@
 			</view>
 		</view>
 		<view class="category">
-			<view class="item" v-for="(item, index) in category" :key="index" @tap="goPro(item)">
-				<image :src="item.pic"></image>
-				<view>{{ item.cate_name }}</view>
-			</view>
+			<swiper class="screen-swiper square-dot"
+			:indicator-dots="true"
+			indicator-active-color="#e54d42"  
+			indicator-color="#8799a3">
+				<swiper-item v-for="(item, index) in category" :key="index">
+					<view class="item" v-for="(k, idx) in item" :key="idx" @tap="goPro(k)">
+						<image :src="k.pic"></image>
+						<view>{{ k.cate_name }}</view>
+					</view>						
+				</swiper-item>			
+			</swiper>
 		</view>
 		<view class="bg-white padding-tb-sm" ><image src="/static/t1.jpg" class="tit"></image></view>		
 		<view class="coupon_info bg-white">
@@ -127,7 +134,7 @@
 				})
 				this.shop = res.data.list
 				this.hotSearch = res.data.list.map(item => item.store_name)
-				this.category = res.data.parentCategory
+				this.category = this.sliceArray(res.data.parentCategory)
 				this.news = res.data.new
 				this.$store.commit('SET_BARSHOW', res.data.barstyle === void 0 ? 0 : res.data.barstyle)
 				if (!this.location.length) {
@@ -177,6 +184,16 @@
 			uni.$off('onLoad')
 		},
 		methods: {
+			sliceArray (arr, num = 10) {
+				let newArr = []
+				let len = Math.ceil(arr.length / num)
+				for (let i = 0; i < len;i++) {
+					let start = i * num
+					let end =  start + num
+					newArr.push(arr.slice(start, end))
+				}
+				return newArr
+			},
 			linkTo (item) {
 				if (item.pid) {
 					uni.navigateTo({
@@ -319,22 +336,29 @@
 		display: flex;
 		flex-wrap: wrap;
 		background-color: var(--white);
-		padding-bottom: 25rpx;
-		& > .item {
-			width: 20%;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			padding-top: 25rpx;
-			& > view {
-				font-size: 13px;
-				margin-top:10rpx; 
-			}
-			image {
-				height: 88rpx;
-				width: 88rpx;
-				display: block;
+		position: relative;
+		swiper {
+			min-height: 340rpx;
+			width: 100%;
+			swiper-item {
+				display: flex;
+				flex-wrap: wrap;
+				.item {
+					width: 20%;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: flex-start;
+					& > view {
+						font-size: 13px;
+						margin-top:15rpx; 
+					}
+					image {
+						height: 88rpx;
+						width: 88rpx;
+						display: block;
+					}
+				}				
 			}
 		}
 	}

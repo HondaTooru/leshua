@@ -16,7 +16,7 @@
 		<view class="box flex-sub">
 			<scroll-view scroll-y="true" v-if="list.length" @scrolltolower="LoadMore">
 				<view class="cu-list menu-avatar">
-					<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.id" class="cu-item" v-for="item in list" :key="item.id">
+					<navigator hover-class="none" :url="'/pages/index/prodetail?id='+item.id" class="cu-item" v-for="(item, idx) in list" :key="idx">
 						<view class="cu-avatar lg" :style="{ backgroundImage: 'url('+ item.image +')' }"></view>
 						<view class="content">
 							<view class="text-cut">{{ item.store_name }}</view>
